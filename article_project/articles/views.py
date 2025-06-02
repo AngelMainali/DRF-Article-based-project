@@ -2,10 +2,13 @@
 from rest_framework import generics,serializers
 
 from django.contrib.auth.models import User
-from articles.serializers import UserDetailsSerializer,ArticleSerializer
+from articles.serializers import UserDetailsSerializer,ArticleSerializer,CustomTokenSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Article
+
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 
 
@@ -31,12 +34,18 @@ class LoginView(APIView):
         
 
 class ArticleCreateGetView(generics.ListCreateAPIView):
+    authentication_classes=[JWTAuthentication]
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
 
 class ArticleRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
+
+class CustomTokenView(TokenObtainPairView):
+    serializer_class=CustomTokenSerializer
+    
+
 
 
 
